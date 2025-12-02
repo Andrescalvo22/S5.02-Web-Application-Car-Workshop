@@ -15,7 +15,7 @@ public class Car {
     private String plateNumber;
     private String brand;
     private String model;
-    private String year;
+    private Integer year;
 
     @Enumerated(EnumType.STRING)
     private CarStatus status;
