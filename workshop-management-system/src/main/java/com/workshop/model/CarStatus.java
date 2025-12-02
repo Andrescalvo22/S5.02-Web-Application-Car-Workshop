@@ -1,7 +1,7 @@
 package com.workshop.model;
 
 public enum CarStatus {
-    PENDING_DIAGNOSIS,
+    PENDING_DIAGNOSTIC,
     FIXING,
     READY
 }
