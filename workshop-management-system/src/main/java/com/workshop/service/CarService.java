@@ -14,4 +14,8 @@ public interface CarService {
     CarDTO update(Long id, CarDTO dto);
 
     CarDTO updateStatus(Long id, String newStatus);
+
+    List<CarDTO> getAll();
+
+    void delete(Long id);
 }

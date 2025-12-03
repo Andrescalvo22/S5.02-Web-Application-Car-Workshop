@@ -89,5 +89,23 @@ public class CarServiceImpl implements CarService {
 
         return mapper.toDTO(carRepository.save(car));
     }
+
+    @Override
+    public List<CarDTO> getAll() {
+        return carRepository.findAll()
+                .stream()
+                .map(mapper::toDTO)
+                .toList();
+    }
+
+    @Override
+    public void delete(Long id) {
+        if (!carRepository.existsById(id)) {
+            throw new CarNotFoundException(id);
+        }
+        carRepository.deleteById(id);
+    }
+
+
 }
 
