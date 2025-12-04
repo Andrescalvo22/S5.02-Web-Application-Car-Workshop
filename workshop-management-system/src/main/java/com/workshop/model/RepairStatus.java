@@ -1,7 +1,8 @@
 package com.workshop.model;
 
 public enum RepairStatus {
-    OPEN,
-    IN_PROCESS,
-    FINISHED
+    PENDING,
+    IN_PROGRESS,
+    READY_FOR_PICKUP,
+    CLOSED
 }
