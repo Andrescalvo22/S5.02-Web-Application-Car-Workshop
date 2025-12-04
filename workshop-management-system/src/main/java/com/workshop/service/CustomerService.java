@@ -5,7 +5,6 @@ import com.workshop.dto.CustomerDTO;
 import java.util.List;
 
 public interface CustomerService {
-    CustomerDTO create(CustomerDTO dto);
 
     List<CustomerDTO> getAll();
 
