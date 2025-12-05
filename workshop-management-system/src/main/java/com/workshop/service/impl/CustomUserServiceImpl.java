@@ -31,9 +31,6 @@ public class CustomUserServiceImpl implements UserDetailsService {
                 .withUsername(user.getEmail())
                 .password(user.getPassword())
                 .authorities(authorities)
-                .accountLocked(false)
-                .disabled(false)
                 .build();
     }
 }
-
