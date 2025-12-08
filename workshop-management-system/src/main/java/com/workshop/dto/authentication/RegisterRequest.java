@@ -21,5 +21,8 @@ public class RegisterRequest {
 
     @NotBlank
     private String lastName;
+
+    @NotBlank
+    private Long customerId;
 }
 
