@@ -8,12 +8,13 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/customers")
+@RequestMapping("/api/customers")
 @RequiredArgsConstructor
 @Tag(name = "Customers", description = "Customer management operations")
 public class CustomerController {
@@ -21,12 +22,14 @@ public class CustomerController {
     private final CustomerService service;
 
     @Operation(summary = "Create a new customer")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<CustomerDTO> create(@Valid @RequestBody CustomerDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.create(dto));
     }
 
     @Operation(summary = "Get all customers")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<List<CustomerDTO>> getAll() {
         return ResponseEntity.ok(service.getAll());
@@ -40,12 +43,14 @@ public class CustomerController {
 
     @Operation(summary = "Update a customer")
     @PutMapping("/{id}")
-    public ResponseEntity<CustomerDTO> update(@PathVariable Long id,
-                                              @Valid @RequestBody CustomerDTO dto) {
+    public ResponseEntity<CustomerDTO> update(
+            @PathVariable Long id,
+            @Valid @RequestBody CustomerDTO dto) {
         return ResponseEntity.ok(service.update(id, dto));
     }
 
     @Operation(summary = "Delete a customer")
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);
