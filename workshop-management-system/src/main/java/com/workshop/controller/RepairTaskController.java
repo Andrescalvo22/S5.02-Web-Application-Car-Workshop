@@ -10,20 +10,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+
 @RestController
-@RequestMapping("/tasks")
+@RequestMapping("/api/tasks")
 @RequiredArgsConstructor
 @Tag(name = "Repair Tasks", description = "Operations for managing repair tasks within repair orders")
-public class RepairTaskController{
+public class RepairTaskController {
 
-    private RepairTaskService service;
+    private final RepairTaskService service;
 
     @Operation(summary = "Create a new repair task for a specific repair order")
     @PostMapping("/order/{orderId}")
     public ResponseEntity<RepairTaskDTO> create(@PathVariable Long orderId,
                                                 @Valid @RequestBody RepairTaskDTO dto) {
-        RepairTaskDTO created = service.create(orderId, dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.create(orderId, dto));
     }
 
     @Operation(summary = "Get all repair tasks")
@@ -33,7 +33,7 @@ public class RepairTaskController{
     }
 
     @Operation(summary = "Get a repair task by ID")
-    @GetMapping
+    @GetMapping("/{id}")
     public ResponseEntity<RepairTaskDTO> getById(@PathVariable Long id) {
         return ResponseEntity.ok(service.getById(id));
     }

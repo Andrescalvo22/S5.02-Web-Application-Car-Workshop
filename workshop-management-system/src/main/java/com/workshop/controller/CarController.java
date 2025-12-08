@@ -8,12 +8,13 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/cars")
+@RequestMapping("/api/cars")
 @RequiredArgsConstructor
 @Tag(name = "Cars", description = "Operations related to vehicle management")
 public class CarController {
@@ -21,6 +22,7 @@ public class CarController {
     private final CarService carService;
 
     @Operation(summary = "Create a new car for a specific customer")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('CUSTOMER')")
     @PostMapping("/customer/{customerId}")
     public ResponseEntity<CarDTO> createForCustomer(@PathVariable Long customerId,
                                                     @Valid @RequestBody CarDTO dto) {
@@ -29,6 +31,7 @@ public class CarController {
     }
 
     @Operation(summary = "Get all cars in the system")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<List<CarDTO>> getAll() {
         return ResponseEntity.ok(carService.getAll());
@@ -54,6 +57,7 @@ public class CarController {
     }
 
     @Operation(summary = "Update only the status of a car")
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}/status")
     public ResponseEntity<CarDTO> updateStatus(@PathVariable Long id,
                                                @RequestParam String status) {
@@ -61,6 +65,7 @@ public class CarController {
     }
 
     @Operation(summary = "Delete a car by its ID")
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         carService.delete(id);
