@@ -8,22 +8,21 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/repair-orders")
+@RequestMapping("/api/repair-orders")
 @RequiredArgsConstructor
 @Tag(name = "Repair Orders", description = "Operations for managing car repair orders")
 public class RepairOrderController {
 
     private final RepairOrderService service;
 
-    // =====================
-    // CREATE
-    // =====================
     @Operation(summary = "Create a repair order for a specific car")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('CUSTOMER')")
     @PostMapping("/car/{carId}")
     public ResponseEntity<RepairOrderDTO> create(@PathVariable Long carId,
                                                  @Valid @RequestBody RepairOrderDTO dto) {
@@ -31,10 +30,8 @@ public class RepairOrderController {
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
-    // =====================
-    // READ
-    // =====================
     @Operation(summary = "Get all repair orders")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<List<RepairOrderDTO>> getAll() {
         return ResponseEntity.ok(service.getAll());
@@ -52,15 +49,17 @@ public class RepairOrderController {
         return ResponseEntity.ok(service.getByCarId(carId));
     }
 
-    @Operation(summary = "Update the status of a repair order")
-    @PutMapping("/{id}/status")
+    @Operation(summary = "Update a repair order")
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/{id}")
     public ResponseEntity<RepairOrderDTO> update(@PathVariable Long id,
-                                                 @RequestParam RepairOrderDTO dto) {
+                                                 @Valid @RequestBody RepairOrderDTO dto) {
         return ResponseEntity.ok(service.update(id, dto));
     }
 
-    @Operation(summary = "Delete a repair order")
-    @DeleteMapping("/{id}")
+    @Operation(summary = "Close a repair order (status = CLOSED)")
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/{id}/close")
     public ResponseEntity<Void> closeOrder(@PathVariable Long id) {
         service.closeOrder(id);
         return ResponseEntity.noContent().build();
