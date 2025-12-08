@@ -9,10 +9,11 @@ import com.workshop.model.RepairTask;
 import com.workshop.model.User;
 import com.workshop.repository.RepairOrderRepository;
 import com.workshop.repository.RepairTaskRepository;
-import com.workshop.service.RepairTaskService;
-import org.springframework.stereotype.Service;
 import com.workshop.repository.UserRepository;
+import com.workshop.service.RepairTaskService;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -24,10 +25,12 @@ public class RepairTaskServiceImpl implements RepairTaskService {
     private final RepairTaskMapper mapper;
     private final UserRepository userRepository;
 
-    public RepairTaskServiceImpl(RepairTaskRepository repository,
-                                 RepairOrderRepository orderRepository,
-                                 RepairTaskMapper mapper,
-                                 UserRepository userRepository) {
+    public RepairTaskServiceImpl(
+            RepairTaskRepository repository,
+            RepairOrderRepository orderRepository,
+            RepairTaskMapper mapper,
+            UserRepository userRepository
+    ) {
         this.repository = repository;
         this.orderRepository = orderRepository;
         this.mapper = mapper;
@@ -35,7 +38,16 @@ public class RepairTaskServiceImpl implements RepairTaskService {
     }
 
     private User getAuthenticatedUser() {
-        String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email;
+
+        if (principal instanceof UserDetails userDetails) {
+            email = userDetails.getUsername();
+        } else {
+            email = principal.toString();
+        }
+
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
@@ -45,7 +57,14 @@ public class RepairTaskServiceImpl implements RepairTaskService {
     }
 
     private void validateOwnershipOrAdmin(RepairOrder order, User user) {
-        if (!isAdmin(user) && !order.getCar().getCustomer().getId().equals(user.getCustomerId())) {
+
+        if (order.getCar() == null || order.getCar().getCustomer() == null) {
+            throw new RuntimeException("Order does not have a valid customer assigned");
+        }
+
+        Long orderCustomerId = order.getCar().getCustomer().getId();
+
+        if (!isAdmin(user) && !orderCustomerId.equals(user.getCustomerId())) {
             throw new RuntimeException("Access denied");
         }
     }
@@ -86,9 +105,9 @@ public class RepairTaskServiceImpl implements RepairTaskService {
 
         validateOwnershipOrAdmin(order, user);
 
-        return repository.findAll()
-                .stream()
-                .filter(t -> t.getRepairOrder().getId().equals(orderId))
+        List<RepairTask> tasks = repository.findByRepairOrderId(orderId);
+
+        return tasks.stream()
                 .map(mapper::toDTO)
                 .toList();
     }
