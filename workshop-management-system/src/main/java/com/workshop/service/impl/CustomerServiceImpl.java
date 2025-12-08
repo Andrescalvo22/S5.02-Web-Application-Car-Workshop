@@ -40,6 +40,23 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    public CustomerDTO create(CustomerDTO dto) {
+        User user = getAuthenticatedUser();
+
+        if (!isAdmin(user)) {
+            throw new RuntimeException("Only ADMIN can create customers");
+        }
+
+        Customer customer = mapper.toEntity(dto);
+
+        customer.setId(null);
+
+        Customer saved = repository.save(customer);
+
+        return mapper.toDTO(saved);
+    }
+
+    @Override
     public List<CustomerDTO> getAll() {
         User user = getAuthenticatedUser();
 
