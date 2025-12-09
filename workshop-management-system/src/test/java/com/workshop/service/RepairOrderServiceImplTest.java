@@ -46,7 +46,6 @@ class RepairOrderServiceImplTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        // Fake authenticated user
         adminUser = User.builder()
                 .id(1L)
                 .email("admin@test.com")
@@ -79,19 +78,11 @@ class RepairOrderServiceImplTest {
         dto.setStatus(RepairStatus.PENDING);
     }
 
-    // -------------------------------
-    // Helpers
-    // -------------------------------
-
     private void authenticate(User user) {
         var auth = new UsernamePasswordAuthenticationToken(user.getEmail(), null, List.of());
         SecurityContextHolder.getContext().setAuthentication(auth);
         when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
     }
-
-    // -------------------------------
-    // TEST: CREATE
-    // -------------------------------
 
     @Test
     void testCreateRepairOrder_Success() {
@@ -118,10 +109,6 @@ class RepairOrderServiceImplTest {
         assertThrows(CarNotFoundException.class, () -> service.create(5L, dto));
     }
 
-    // -------------------------------
-    // TEST: GET BY ID
-    // -------------------------------
-
     @Test
     void testGetById_Success() {
         authenticate(customerUser);
@@ -143,10 +130,6 @@ class RepairOrderServiceImplTest {
 
         assertThrows(RepairOrderNotFoundException.class, () -> service.getById(100L));
     }
-
-    // -------------------------------
-    // TEST: GET BY CAR ID
-    // -------------------------------
 
     @Test
     void testGetByCarId_Success() {
@@ -170,10 +153,6 @@ class RepairOrderServiceImplTest {
         assertThrows(CarNotFoundException.class, () -> service.getByCarId(5L));
     }
 
-    // -------------------------------
-    // TEST: GET ALL (ADMIN ONLY)
-    // -------------------------------
-
     @Test
     void testGetAll_AdminSuccess() {
         authenticate(adminUser);
@@ -192,10 +171,6 @@ class RepairOrderServiceImplTest {
 
         assertThrows(RuntimeException.class, () -> service.getAll());
     }
-
-    // -------------------------------
-    // TEST: UPDATE
-    // -------------------------------
 
     @Test
     void testUpdate_Success() {
@@ -218,10 +193,6 @@ class RepairOrderServiceImplTest {
 
         assertThrows(RepairOrderNotFoundException.class, () -> service.update(100L, dto));
     }
-
-    // -------------------------------
-    // TEST: CLOSE ORDER
-    // -------------------------------
 
     @Test
     void testCloseOrder_Success() {
