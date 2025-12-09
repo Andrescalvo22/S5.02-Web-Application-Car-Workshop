@@ -1,5 +1,6 @@
 package com.workshop.dto.authentication;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import jakarta.validation.constraints.Email;
@@ -22,7 +23,7 @@ public class RegisterRequest {
     @NotBlank
     private String lastName;
 
-    @NotBlank
+    @NotNull
     private Long customerId;
 }
 
