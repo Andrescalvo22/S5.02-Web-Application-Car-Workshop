@@ -9,6 +9,7 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class RepairOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
