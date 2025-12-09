@@ -1,7 +1,6 @@
 package com.workshop.mapper;
 
 import com.workshop.dto.UserDTO;
-import com.workshop.model.Role;
 import com.workshop.model.User;
 import org.springframework.stereotype.Component;
 
