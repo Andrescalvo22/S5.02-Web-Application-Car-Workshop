@@ -59,10 +59,11 @@ public class AuthServiceImpl implements AuthService {
 
         userRepository.save(newUser);
 
-        String token = jwtProvider.generateToken(
-                newUser.getEmail(),
-                Set.of("ROLE_CUSTOMER")
-        );
+        Set<String> roles = newUser.getRoles().stream()
+                .map(Enum::name)
+                .collect(Collectors.toSet());
+
+        String token = jwtProvider.generateToken(newUser.getEmail(), roles);
 
         return new AuthResponse(token);
     }
