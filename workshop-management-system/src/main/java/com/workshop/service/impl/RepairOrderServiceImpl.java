@@ -16,6 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import org.springframework.security.access.AccessDeniedException;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -81,6 +82,14 @@ public class RepairOrderServiceImpl implements RepairOrderService {
         checkOwnershipOrAdmin(order.getCar(), user, "You cannot access this repair order");
 
         return mapper.toDTO(order);
+    }
+
+    @Override
+    public List<RepairOrderDTO> getByCustomerId(Long customerId) {
+        return repository.findByCarCustomerId(customerId)
+                .stream()
+                .map(mapper::toDTO)
+                .toList();
     }
 
     @Override
