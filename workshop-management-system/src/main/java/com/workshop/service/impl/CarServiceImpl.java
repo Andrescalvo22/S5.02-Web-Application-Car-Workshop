@@ -48,9 +48,8 @@ public class CarServiceImpl implements CarService {
             throw new CustomerNotFoundException(customerId);
         }
 
-        return carRepository.findAll()
+        return carRepository.findByCustomerId(customerId)
                 .stream()
-                .filter(c -> c.getCustomer().getId().equals(customerId))
                 .map(mapper::toDTO)
                 .toList();
     }
