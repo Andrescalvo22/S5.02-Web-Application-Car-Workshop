@@ -10,6 +10,8 @@ public interface RepairOrderService {
 
     RepairOrderDTO getById(Long id);
 
+    List<RepairOrderDTO> getByCustomerId(Long customerId);
+
     List<RepairOrderDTO> getByCarId(Long carId);
 
     List<RepairOrderDTO> getAll();
