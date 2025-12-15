@@ -23,7 +23,5 @@ public class RegisterRequest {
     @NotBlank
     private String lastName;
 
-    @NotNull
-    private Long customerId;
 }
 
