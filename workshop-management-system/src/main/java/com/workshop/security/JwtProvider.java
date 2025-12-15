@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtProvider {
@@ -26,7 +28,7 @@ public class JwtProvider {
 
         return Jwts.builder()
                 .setSubject(email)
-                .claim("roles", String.join(",", roles))
+                .claim("roles", roles)
                 .setIssuedAt(new Date(now))
                 .setExpiration(new Date(now + expirationMs))
                 .signWith(key, SignatureAlgorithm.HS256)
@@ -55,17 +57,22 @@ public class JwtProvider {
     }
 
     public Set<String> getRolesFromToken(String token) {
-        String roles = Jwts.parserBuilder()
+        Object rolesObj = Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
                 .parseClaimsJws(token)
                 .getBody()
-                .get("roles", String.class);
+                .get("roles");
 
-        if (roles == null || roles.isEmpty())
-            return Set.of();
+        if (rolesObj instanceof String s) {
+            return Set.of(s);
+        }
 
-        return Set.of(roles.split(","));
+        if (rolesObj instanceof Collection<?> c) {
+            return c.stream().map(Object::toString).collect(Collectors.toSet());
+        }
+
+        return Set.of();
     }
 }
 
