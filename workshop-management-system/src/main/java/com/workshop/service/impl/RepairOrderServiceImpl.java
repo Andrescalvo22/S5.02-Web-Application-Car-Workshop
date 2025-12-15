@@ -3,6 +3,7 @@ package com.workshop.service.impl;
 import com.workshop.dto.RepairOrderDTO;
 import com.workshop.exception.CarNotFoundException;
 import com.workshop.exception.RepairOrderNotFoundException;
+import com.workshop.exception.UserNotFoundException;
 import com.workshop.mapper.RepairOrderMapper;
 import com.workshop.model.Car;
 import com.workshop.model.RepairOrder;
@@ -53,6 +54,29 @@ public class RepairOrderServiceImpl implements RepairOrderService {
             throw new AccessDeniedException(message);
         }
     }
+
+    @Override
+    public List<RepairOrderDTO> getMyOrders() {
+
+        String email = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getName();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException(email));
+
+        if (user.getCustomerId() == null) {
+            return List.of();
+        }
+
+        List<RepairOrder> orders = repository
+                .findByCar_Customer_Id(user.getCustomerId());
+
+        return orders.stream()
+                .map(mapper::toDTO)
+                .toList();
+    }
+
 
     @Override
     public RepairOrderDTO create(Long carId, RepairOrderDTO dto) {

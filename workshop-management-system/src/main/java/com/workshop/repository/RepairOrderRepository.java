@@ -8,4 +8,6 @@ import java.util.List;
 public interface RepairOrderRepository extends JpaRepository<RepairOrder, Long> {
     List<RepairOrder> findByCarCustomerId(Long customerId);
 
+    List<RepairOrder> findByCar_Customer_Id(Long customerId);
+
 }

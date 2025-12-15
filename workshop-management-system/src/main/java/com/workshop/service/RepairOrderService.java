@@ -19,5 +19,8 @@ public interface RepairOrderService {
     RepairOrderDTO update(Long id, RepairOrderDTO dto);
 
     RepairOrderDTO closeOrder(Long id);
+
+    List<RepairOrderDTO> getMyOrders();
+
 }
 
