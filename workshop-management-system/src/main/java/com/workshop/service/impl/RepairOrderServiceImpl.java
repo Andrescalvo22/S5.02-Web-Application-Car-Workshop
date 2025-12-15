@@ -40,7 +40,7 @@ public class RepairOrderServiceImpl implements RepairOrderService {
     }
 
     private User getAuthenticatedUser() {
-        String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
