@@ -1,6 +1,7 @@
 package com.workshop.config;
 
 import com.workshop.security.JwtAuthFilter;
+import jakarta.annotation.PostConstruct;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -43,8 +44,8 @@ public class SecurityConfig {
 
                         .requestMatchers("/api/cars/my").hasAnyRole("USER", "CUSTOMER")
                         .requestMatchers("/api/cars/customer/**").hasAnyRole("USER", "CUSTOMER")
-                        .requestMatchers("/api/repair-orders/my").hasAnyRole("USER", "CUSTOMER")
-                        .requestMatchers("/api/repair-orders/car/**").hasAnyRole("USER", "CUSTOMER")
+                        .requestMatchers("/api/repair-orders/my").hasAnyRole("ADMIN", "USER", "CUSTOMER")
+                        .requestMatchers("/api/repair-orders/car/**").hasAnyRole("ADMIN", "USER", "CUSTOMER")
 
                         .requestMatchers("/api/users/me").authenticated()
 
