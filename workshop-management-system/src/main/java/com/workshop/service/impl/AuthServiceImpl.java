@@ -3,8 +3,10 @@ package com.workshop.service.impl;
 import com.workshop.dto.authentication.AuthRequest;
 import com.workshop.dto.authentication.AuthResponse;
 import com.workshop.dto.authentication.RegisterRequest;
+import com.workshop.model.Customer;
 import com.workshop.model.Role;
 import com.workshop.model.User;
+import com.workshop.repository.CustomerRepository;
 import com.workshop.repository.UserRepository;
 import com.workshop.security.JwtProvider;
 import com.workshop.service.AuthService;
@@ -22,6 +24,7 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
+    private final CustomerRepository customerRepository;
 
     @Override
     public AuthResponse login(AuthRequest request) {
@@ -49,12 +52,20 @@ public class AuthServiceImpl implements AuthService {
             throw new RuntimeException("Email already registered");
         }
 
+        Customer customer = Customer.builder()
+                .name(request.getName() + " " + request.getLastName())
+                .email(request.getEmail())
+                .telephone("N/A")
+                .build();
+
+        customerRepository.save(customer);
+
         User newUser = User.builder()
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .enabled(true)
                 .roles(Set.of(Role.ROLE_USER))
-                .customerId(request.getCustomerId())
+                .customerId(customer.getId())
                 .build();
 
         userRepository.save(newUser);
