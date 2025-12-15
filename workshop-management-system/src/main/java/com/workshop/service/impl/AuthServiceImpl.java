@@ -29,8 +29,15 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public AuthResponse login(AuthRequest request) {
 
+        System.out.println("====== LOGIN DEBUG ======");
+        System.out.println("EMAIL RECIBIDO: " + request.getEmail());
+        System.out.println("PASSWORD RECIBIDO: " + request.getPassword());
+
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("Incorrect email or password"));
+
+        System.out.println("HASH EN BD: " + user.getPassword());
+        System.out.println("PASSWORD MATCH?: " + passwordEncoder.matches(request.getPassword(), user.getPassword()));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new RuntimeException("Incorrect email or password");
