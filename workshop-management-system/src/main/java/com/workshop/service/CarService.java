@@ -18,4 +18,6 @@ public interface CarService {
     List<CarDTO> getAll();
 
     void delete(Long id);
+
+    List<CarDTO> getMyCars();
 }

@@ -8,9 +8,12 @@ import com.workshop.mapper.CarMapper;
 import com.workshop.model.Car;
 import com.workshop.model.CarStatus;
 import com.workshop.model.Customer;
+import com.workshop.model.User;
 import com.workshop.repository.CarRepository;
 import com.workshop.repository.CustomerRepository;
+import com.workshop.repository.UserRepository;
 import com.workshop.service.CarService;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,13 +24,15 @@ public class CarServiceImpl implements CarService {
     private final CarRepository carRepository;
     private final CustomerRepository customerRepository;
     private final CarMapper mapper;
+    private final UserRepository userRepository;
 
     public CarServiceImpl(CarRepository carRepository,
                           CustomerRepository customerRepository,
-                          CarMapper mapper) {
+                          CarMapper mapper, UserRepository userRepository) {
         this.carRepository = carRepository;
         this.customerRepository = customerRepository;
         this.mapper = mapper;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -60,6 +65,27 @@ public class CarServiceImpl implements CarService {
                 .orElseThrow(() -> new CarNotFoundException(id));
         return mapper.toDTO(car);
     }
+
+    @Override
+    public List<CarDTO> getMyCars() {
+
+        String email = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getName();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (user.getCustomerId() == null) {
+            return List.of();
+        }
+
+        return carRepository.findByCustomerId(user.getCustomerId())
+                .stream()
+                .map(mapper::toDTO)
+                .toList();
+    }
+
 
     @Override
     public CarDTO update(Long id, CarDTO dto) {

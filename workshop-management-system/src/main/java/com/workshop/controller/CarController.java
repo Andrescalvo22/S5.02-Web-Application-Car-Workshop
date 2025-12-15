@@ -49,6 +49,12 @@ public class CarController {
         return ResponseEntity.ok(carService.getByCustomer(customerId));
     }
 
+    @Operation(summary = "Get cars of the authenticated user")
+    @GetMapping("/my")
+    public ResponseEntity<List<CarDTO>> getMyCars() {
+        return ResponseEntity.ok(carService.getMyCars());
+    }
+
     @Operation(summary = "Update all the details of a car")
     @PutMapping("/{id}")
     public ResponseEntity<CarDTO> update(@PathVariable Long id,
