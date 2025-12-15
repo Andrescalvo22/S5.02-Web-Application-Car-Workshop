@@ -1,6 +1,7 @@
 package com.workshop.controller;
 
 import com.workshop.dto.CarDTO;
+import com.workshop.dto.UpdateCarStatusDTO;
 import com.workshop.service.CarService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -72,6 +73,16 @@ public class CarController {
     public ResponseEntity<CarDTO> updateStatus(@PathVariable Long id,
                                                @RequestParam String status) {
         return ResponseEntity.ok(carService.updateStatus(id, status));
+    }
+
+    @Operation(summary = "Update only the status of a car")
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/{id}/status")
+    public ResponseEntity<CarDTO> updateCarStatus(
+            @PathVariable Long id,
+            @RequestBody UpdateCarStatusDTO dto
+    ) {
+        return ResponseEntity.ok(carService.updateStatus(id, dto.getStatus()));
     }
 
     @Operation(summary = "Delete a car by its ID")
