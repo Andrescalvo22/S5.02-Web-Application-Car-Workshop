@@ -43,6 +43,13 @@ public class RepairOrderController {
         return ResponseEntity.ok(service.getById(id));
     }
 
+    @Operation(summary = "Get repair orders of authenticated customer")
+    @GetMapping("/my")
+    public ResponseEntity<List<RepairOrderDTO>> getMyOrders() {
+        return ResponseEntity.ok(service.getMyOrders());
+    }
+
+
     @Operation(summary = "Get all repair orders for a specific car")
     @GetMapping("/car/{carId}")
     public ResponseEntity<List<RepairOrderDTO>> getByCarId(@PathVariable Long carId) {
