@@ -32,6 +32,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
+
                         .requestMatchers("/api/auth/**").permitAll()
 
                         .requestMatchers(
@@ -40,20 +41,25 @@ public class SecurityConfig {
                                 "/v3/api-docs/**"
                         ).permitAll()
 
+                        .requestMatchers("/api/cars/my").hasAnyRole("USER", "CUSTOMER")
+                        .requestMatchers("/api/cars/customer/**").hasAnyRole("USER", "CUSTOMER")
+                        .requestMatchers("/api/repair-orders/my").hasAnyRole("USER", "CUSTOMER")
+                        .requestMatchers("/api/repair-orders/car/**").hasAnyRole("USER", "CUSTOMER")
+
                         .requestMatchers("/api/users/me").authenticated()
 
-                        .requestMatchers(HttpMethod.DELETE, "/api/customers/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/customers").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/customers/**").hasRole("ADMIN")
 
-                        .requestMatchers(HttpMethod.DELETE, "/api/cars/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/cars").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/cars/**").hasRole("ADMIN")
 
                         .requestMatchers("/api/users/**").hasRole("ADMIN")
-
                         .requestMatchers(HttpMethod.GET, "/api/tasks").hasRole("ADMIN")
 
                         .anyRequest().authenticated()
                 )
+
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
@@ -61,16 +67,16 @@ public class SecurityConfig {
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration config = new CorsConfiguration();
 
+        CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOrigins(List.of("http://localhost:3000"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
+
         config.setAllowCredentials(false);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
-
         return source;
     }
 
