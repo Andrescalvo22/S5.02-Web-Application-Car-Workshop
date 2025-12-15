@@ -1,7 +1,6 @@
 package com.workshop.config;
 
 import com.workshop.security.JwtAuthFilter;
-import jakarta.annotation.PostConstruct;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -54,6 +53,8 @@ public class SecurityConfig {
 
                         .requestMatchers(HttpMethod.GET, "/api/cars").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/cars/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/cars/*/status").hasRole("ADMIN")
+
 
                         .requestMatchers("/api/users/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/tasks").hasRole("ADMIN")
