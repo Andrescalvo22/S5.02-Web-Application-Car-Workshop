@@ -67,9 +67,8 @@ public class RepairOrderController {
     @Operation(summary = "Close a repair order (status = CLOSED)")
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}/close")
-    public ResponseEntity<Void> closeOrder(@PathVariable Long id) {
-        service.closeOrder(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<RepairOrderDTO> closeOrder(@PathVariable Long id) {
+        return ResponseEntity.ok(service.closeOrder(id));
     }
 }
 
