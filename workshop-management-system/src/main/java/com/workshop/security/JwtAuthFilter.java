@@ -49,7 +49,17 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toSet());
 
-                var auth = new UsernamePasswordAuthenticationToken(email, null, authorities);
+                var userDetails = org.springframework.security.core.userdetails.User
+                        .withUsername(email)
+                        .password("")
+                        .authorities(authorities)
+                        .build();
+
+                var auth = new UsernamePasswordAuthenticationToken(
+                        userDetails,
+                        null,
+                        userDetails.getAuthorities()
+                );
 
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }
@@ -57,6 +67,5 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
     }
-
 }
 
