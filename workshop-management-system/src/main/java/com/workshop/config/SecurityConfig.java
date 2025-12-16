@@ -4,6 +4,7 @@ import com.workshop.security.JwtAuthFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -17,6 +18,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.List;
 
 @Configuration
+@EnableMethodSecurity
 public class SecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
@@ -47,6 +49,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/repair-orders/car/**").hasAnyRole("ADMIN", "USER", "CUSTOMER")
 
                         .requestMatchers("/api/users/me").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/api/repair-orders/*/close").hasRole("ADMIN")
+
 
                         .requestMatchers(HttpMethod.GET, "/api/customers").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/customers/**").hasRole("ADMIN")
