@@ -43,10 +43,10 @@ public class SecurityConfig {
                                 "/v3/api-docs/**"
                         ).permitAll()
 
-                        .requestMatchers("/api/cars/my").hasAnyRole("ADMIN", "USER", "CUSTOMER")
-                        .requestMatchers("/api/cars/customer/**").hasAnyRole("ADMIN", "USER", "CUSTOMER")
-                        .requestMatchers("/api/repair-orders/my").hasAnyRole("ADMIN", "USER", "CUSTOMER")
-                        .requestMatchers("/api/repair-orders/car/**").hasAnyRole("ADMIN", "USER", "CUSTOMER")
+                        .requestMatchers("/api/cars/my").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers("/api/cars/customer/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers("/api/repair-orders/my").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers("/api/repair-orders/car/**").hasAnyRole("ADMIN", "USER")
 
                         .requestMatchers("/api/users/me").authenticated()
                         .requestMatchers(HttpMethod.PUT, "/api/repair-orders/*/close").hasRole("ADMIN")

@@ -30,8 +30,8 @@ public class AuthServiceImpl implements AuthService {
     public AuthResponse login(AuthRequest request) {
 
         System.out.println("====== LOGIN DEBUG ======");
-        System.out.println("EMAIL RECIBIDO: " + request.getEmail());
-        System.out.println("PASSWORD RECIBIDO: " + request.getPassword());
+        System.out.println("EMAIL RECEIVED: " + request.getEmail());
+        System.out.println("PASSWORD RECEIVED: " + request.getPassword());
 
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("Incorrect email or password"));
