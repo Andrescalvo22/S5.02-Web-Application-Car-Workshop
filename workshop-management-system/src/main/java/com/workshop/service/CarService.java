@@ -20,4 +20,7 @@ public interface CarService {
     void delete(Long id);
 
     List<CarDTO> getMyCars();
+
+    CarDTO createForAuthenticatedUser(CarDTO dto);
+
 }

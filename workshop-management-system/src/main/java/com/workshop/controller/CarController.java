@@ -84,6 +84,14 @@ public class CarController {
         carService.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+    @Operation(summary = "Create a new car for the authenticated user")
+    @PreAuthorize("hasRole('USER')")
+    @PostMapping
+    public ResponseEntity<CarDTO> createMyCar(@Valid @RequestBody CarDTO dto) {
+        CarDTO created = carService.createForAuthenticatedUser(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    }
 }
 
 

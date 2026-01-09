@@ -130,4 +130,28 @@ public class CarServiceImpl implements CarService {
         }
         carRepository.deleteById(id);
     }
+
+    @Override
+    public CarDTO createForAuthenticatedUser(CarDTO dto) {
+
+        String email = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getName();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (user.getCustomerId() == null) {
+            throw new RuntimeException("User has no customer linked");
+        }
+
+        Customer customer = customerRepository.findById(user.getCustomerId())
+                .orElseThrow(() -> new CustomerNotFoundException(user.getCustomerId()));
+
+        Car car = mapper.toEntity(dto);
+        car.setCustomer(customer);
+        car.setStatus(CarStatus.PENDING_DIAGNOSTIC);
+
+        return mapper.toDTO(carRepository.save(car));
+    }
 }
