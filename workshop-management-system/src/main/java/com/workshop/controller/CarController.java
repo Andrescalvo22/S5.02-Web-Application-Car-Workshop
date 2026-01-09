@@ -23,7 +23,7 @@ public class CarController {
     private final CarService carService;
 
     @Operation(summary = "Create a new car for a specific customer")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('CUSTOMER')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/customer/{customerId}")
     public ResponseEntity<CarDTO> createForCustomer(@PathVariable Long customerId,
                                                     @Valid @RequestBody CarDTO dto) {
@@ -39,28 +39,28 @@ public class CarController {
     }
 
     @Operation(summary = "Get a car by its ID")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('CUSTOMER')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @GetMapping("/{id}")
     public ResponseEntity<CarDTO> getById(@PathVariable Long id) {
         return ResponseEntity.ok(carService.getById(id));
     }
 
     @Operation(summary = "Get all cars belonging to a customer")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('CUSTOMER')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @GetMapping("/customer/{customerId}")
     public ResponseEntity<List<CarDTO>> getByCustomer(@PathVariable Long customerId) {
         return ResponseEntity.ok(carService.getByCustomer(customerId));
     }
 
     @Operation(summary = "Get cars of the authenticated user")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('CUSTOMER')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @GetMapping("/my")
     public ResponseEntity<List<CarDTO>> getMyCars() {
         return ResponseEntity.ok(carService.getMyCars());
     }
 
     @Operation(summary = "Update all the details of a car")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('CUSTOMER')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @PutMapping("/{id}")
     public ResponseEntity<CarDTO> update(@PathVariable Long id,
                                          @Valid @RequestBody CarDTO dto) {
