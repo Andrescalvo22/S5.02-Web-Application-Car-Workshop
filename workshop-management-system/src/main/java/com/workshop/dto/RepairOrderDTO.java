@@ -7,11 +7,12 @@ import java.time.LocalDate;
 
 @Data
 public class RepairOrderDTO {
+
     private Long id;
     private String description;
     private LocalDate creationDate;
     private LocalDate closingDate;
     private RepairStatus status;
     private double cost;
-    private Long carId;
+    private CarDTO car;
 }
