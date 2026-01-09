@@ -22,10 +22,12 @@ public class RepairOrderController {
     private final RepairOrderService service;
 
     @Operation(summary = "Create a repair order for a specific car")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('CUSTOMER')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @PostMapping("/car/{carId}")
-    public ResponseEntity<RepairOrderDTO> create(@PathVariable Long carId,
-                                                 @Valid @RequestBody RepairOrderDTO dto) {
+    public ResponseEntity<RepairOrderDTO> create(
+            @PathVariable Long carId,
+            @Valid @RequestBody RepairOrderDTO dto
+    ) {
         RepairOrderDTO created = service.create(carId, dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
@@ -38,19 +40,21 @@ public class RepairOrderController {
     }
 
     @Operation(summary = "Get repair order by ID")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @GetMapping("/{id}")
     public ResponseEntity<RepairOrderDTO> getById(@PathVariable Long id) {
         return ResponseEntity.ok(service.getById(id));
     }
 
-    @Operation(summary = "Get repair orders of authenticated customer")
+    @Operation(summary = "Get repair orders of authenticated user")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @GetMapping("/my")
     public ResponseEntity<List<RepairOrderDTO>> getMyOrders() {
         return ResponseEntity.ok(service.getMyOrders());
     }
 
-
     @Operation(summary = "Get all repair orders for a specific car")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @GetMapping("/car/{carId}")
     public ResponseEntity<List<RepairOrderDTO>> getByCarId(@PathVariable Long carId) {
         return ResponseEntity.ok(service.getByCarId(carId));
@@ -59,8 +63,10 @@ public class RepairOrderController {
     @Operation(summary = "Update a repair order")
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
-    public ResponseEntity<RepairOrderDTO> update(@PathVariable Long id,
-                                                 @Valid @RequestBody RepairOrderDTO dto) {
+    public ResponseEntity<RepairOrderDTO> update(
+            @PathVariable Long id,
+            @Valid @RequestBody RepairOrderDTO dto
+    ) {
         return ResponseEntity.ok(service.update(id, dto));
     }
 
@@ -71,4 +77,3 @@ public class RepairOrderController {
         return ResponseEntity.ok(service.closeOrder(id));
     }
 }
-
