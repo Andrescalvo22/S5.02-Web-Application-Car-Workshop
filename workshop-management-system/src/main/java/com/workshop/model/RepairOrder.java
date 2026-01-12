@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -26,4 +28,8 @@ public class RepairOrder {
     @ManyToOne
     @JoinColumn(name = "car_id")
     private Car car;
+
+
+    @OneToMany(mappedBy = "repairOrder", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RepairNote> notes = new ArrayList<>();
 }
