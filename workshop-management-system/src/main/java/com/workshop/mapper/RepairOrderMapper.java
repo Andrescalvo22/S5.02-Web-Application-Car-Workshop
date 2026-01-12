@@ -5,7 +5,7 @@ import com.workshop.model.RepairOrder;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = { CarMapper.class })
 public interface RepairOrderMapper {
 
     @Mapping(source = "car", target = "car")

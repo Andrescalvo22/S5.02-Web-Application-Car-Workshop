@@ -89,6 +89,9 @@ public class RepairOrderServiceImpl implements RepairOrderService {
 
         RepairOrder order = mapper.toEntity(dto);
         order.setCar(car);
+
+        order.setDescription(dto.getDescription());
+
         order.setCreationDate(LocalDate.now());
         order.setStatus(RepairStatus.PENDING);
 
