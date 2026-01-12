@@ -48,7 +48,17 @@ public class SecurityConfig {
                         .requestMatchers("/api/repair-orders/my").hasAnyRole("ADMIN", "USER")
                         .requestMatchers("/api/repair-orders/car/**").hasAnyRole("ADMIN", "USER")
 
-                        .requestMatchers("/api/users/me").authenticated()
+                                .requestMatchers("/api/repair-orders/my").hasAnyRole("ADMIN", "USER")
+                                .requestMatchers("/api/repair-orders/car/**").hasAnyRole("ADMIN", "USER")
+
+                                .requestMatchers("/api/repair-orders/*/notes").hasRole("ADMIN")
+                                .requestMatchers("/api/repair-orders/*/notes/**").hasRole("ADMIN")
+
+                                .requestMatchers("/api/users/me").authenticated()
+                                .requestMatchers(HttpMethod.PUT, "/api/repair-orders/*/close").hasRole("ADMIN")
+
+
+                                .requestMatchers("/api/users/me").authenticated()
                         .requestMatchers(HttpMethod.PUT, "/api/repair-orders/*/close").hasRole("ADMIN")
 
 
