@@ -43,24 +43,21 @@ public class SecurityConfig {
                                 "/v3/api-docs/**"
                         ).permitAll()
 
-                        .requestMatchers("/api/cars/my").hasAnyRole("ADMIN", "USER")
-                        .requestMatchers("/api/cars/customer/**").hasAnyRole("ADMIN", "USER")
-                        .requestMatchers("/api/repair-orders/my").hasAnyRole("ADMIN", "USER")
-                        .requestMatchers("/api/repair-orders/car/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.GET, "/api/users/me").authenticated()
 
-                                .requestMatchers("/api/repair-orders/my").hasAnyRole("ADMIN", "USER")
-                                .requestMatchers("/api/repair-orders/car/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.GET, "/api/cars/my").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.GET, "/api/cars/customer/**").hasAnyRole("ADMIN", "USER")
 
-                                .requestMatchers("/api/repair-orders/*/notes").hasRole("ADMIN")
-                                .requestMatchers("/api/repair-orders/*/notes/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/repair-orders/my").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.GET, "/api/repair-orders/car/**").hasAnyRole("ADMIN", "USER")
 
-                                .requestMatchers("/api/users/me").authenticated()
-                                .requestMatchers(HttpMethod.PUT, "/api/repair-orders/*/close").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/repair-orders/*/notes").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.POST, "/api/repair-orders/*/notes").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/repair-orders/*/notes/**").hasRole("ADMIN")
 
+                        .requestMatchers("/api/users/**").hasRole("ADMIN")
 
-                                .requestMatchers("/api/users/me").authenticated()
                         .requestMatchers(HttpMethod.PUT, "/api/repair-orders/*/close").hasRole("ADMIN")
-
 
                         .requestMatchers(HttpMethod.GET, "/api/customers").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/customers/**").hasRole("ADMIN")
@@ -69,13 +66,10 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/api/cars/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/cars/*/status").hasRole("ADMIN")
 
-
-                        .requestMatchers("/api/users/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/tasks").hasRole("ADMIN")
 
                         .anyRequest().authenticated()
                 )
-
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
@@ -88,7 +82,6 @@ public class SecurityConfig {
         config.setAllowedOrigins(List.of("http://localhost:3000"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
-
         config.setAllowCredentials(false);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -101,4 +94,5 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 }
+
 
