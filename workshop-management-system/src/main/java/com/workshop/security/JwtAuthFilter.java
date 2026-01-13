@@ -56,9 +56,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                         .build();
 
                 var auth = new UsernamePasswordAuthenticationToken(
-                        userDetails,
+                        email,
                         null,
-                        userDetails.getAuthorities()
+                        authorities
                 );
 
                 SecurityContextHolder.getContext().setAuthentication(auth);
