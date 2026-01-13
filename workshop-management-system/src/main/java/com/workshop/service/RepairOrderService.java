@@ -25,6 +25,8 @@ public interface RepairOrderService {
 
     RepairOrderDetailsDTO getDetails(Long id);
 
+    void delete(Long id);
+
 
 }
 

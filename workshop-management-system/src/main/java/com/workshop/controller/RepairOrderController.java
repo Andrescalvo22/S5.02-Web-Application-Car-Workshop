@@ -85,4 +85,11 @@ public class RepairOrderController {
         return ResponseEntity.ok(service.getDetails(id));
     }
 
+    @Operation(summary = "Delete a repair order")
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        service.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 }

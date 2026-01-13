@@ -226,5 +226,19 @@ public class RepairOrderServiceImpl implements RepairOrderService {
 
                 .build();
     }
+
+    @Override
+    public void delete(Long id) {
+
+        User user = getAuthenticatedUser();
+        if (!isAdmin(user)) {
+            throw new AccessDeniedException("Only ADMIN can delete repair orders");
+        }
+
+        RepairOrder order = repository.findById(id)
+                .orElseThrow(() -> new RepairOrderNotFoundException(id));
+
+        repository.delete(order);
+    }
 }
 
