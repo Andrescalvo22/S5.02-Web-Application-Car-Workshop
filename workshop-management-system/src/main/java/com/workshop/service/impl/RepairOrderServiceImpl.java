@@ -1,6 +1,7 @@
 package com.workshop.service.impl;
 
 import com.workshop.dto.RepairOrderDTO;
+import com.workshop.dto.RepairOrderDetailsDTO;
 import com.workshop.exception.CarNotFoundException;
 import com.workshop.exception.RepairOrderNotFoundException;
 import com.workshop.exception.UserNotFoundException;
@@ -13,6 +14,7 @@ import com.workshop.repository.CarRepository;
 import com.workshop.repository.RepairOrderRepository;
 import com.workshop.repository.UserRepository;
 import com.workshop.service.RepairOrderService;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -180,6 +182,49 @@ public class RepairOrderServiceImpl implements RepairOrderService {
         order.setClosingDate(LocalDate.now());
 
         return mapper.toDTO(repository.save(order));
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public RepairOrderDetailsDTO getDetails(Long id) {
+
+        User user = getAuthenticatedUser();
+
+        RepairOrder order = repository.findById(id)
+                .orElseThrow(() -> new RepairOrderNotFoundException(id));
+
+        checkOwnershipOrAdmin(order.getCar(), user, "You cannot access this repair order");
+
+        Car car = order.getCar();
+        var customer = (car != null) ? car.getCustomer() : null;
+
+        String customerName = customer != null ? customer.getName() : null;
+
+        if (customerName != null) {
+            customerName = customerName.replace(" null", "").trim();
+        }
+
+        return RepairOrderDetailsDTO.builder()
+
+                .id(order.getId())
+                .description(order.getDescription())
+                .creationDate(order.getCreationDate())
+                .closingDate(order.getClosingDate())
+                .status(order.getStatus() != null ? order.getStatus().name() : null)
+                .cost(order.getCost())
+
+                .carId(car != null ? car.getId() : null)
+                .plateNumber(car != null ? car.getPlateNumber() : null)
+                .brand(car != null ? car.getBrand() : null)
+                .model(car != null ? car.getModel() : null)
+                .year(car != null ? car.getYear() : null)
+                .carStatus(car != null && car.getStatus() != null ? car.getStatus().name() : null)
+
+                .customerId(customer != null ? customer.getId() : null)
+                .customerName(customerName)
+                .customerEmail(customer != null ? customer.getEmail() : null)
+
+                .build();
     }
 }
 

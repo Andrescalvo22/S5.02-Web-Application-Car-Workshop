@@ -1,6 +1,7 @@
 package com.workshop.controller;
 
 import com.workshop.dto.RepairOrderDTO;
+import com.workshop.dto.RepairOrderDetailsDTO;
 import com.workshop.service.RepairOrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -76,4 +77,12 @@ public class RepairOrderController {
     public ResponseEntity<RepairOrderDTO> closeOrder(@PathVariable Long id) {
         return ResponseEntity.ok(service.closeOrder(id));
     }
+
+    @Operation(summary = "Get repair order details by ID (includes customer & car)")
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/{id}/details")
+    public ResponseEntity<RepairOrderDetailsDTO> getDetails(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getDetails(id));
+    }
+
 }

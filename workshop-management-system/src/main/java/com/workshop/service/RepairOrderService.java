@@ -1,6 +1,7 @@
 package com.workshop.service;
 
 import com.workshop.dto.RepairOrderDTO;
+import com.workshop.dto.RepairOrderDetailsDTO;
 
 import java.util.List;
 
@@ -21,6 +22,9 @@ public interface RepairOrderService {
     RepairOrderDTO closeOrder(Long id);
 
     List<RepairOrderDTO> getMyOrders();
+
+    RepairOrderDetailsDTO getDetails(Long id);
+
 
 }
 
