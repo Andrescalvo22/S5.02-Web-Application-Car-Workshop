@@ -43,6 +43,8 @@ public class SecurityConfig {
                                 "/v3/api-docs/**"
                         ).permitAll()
 
+                        .requestMatchers(HttpMethod.GET, "/api/repair-orders/*/details").hasRole("ADMIN")
+
                         .requestMatchers(HttpMethod.GET, "/api/users/me").authenticated()
 
                         .requestMatchers(HttpMethod.GET, "/api/cars/my").hasAnyRole("ADMIN", "USER")
@@ -51,9 +53,14 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/repair-orders/my").hasAnyRole("ADMIN", "USER")
                         .requestMatchers(HttpMethod.GET, "/api/repair-orders/car/**").hasAnyRole("ADMIN", "USER")
 
-                        .requestMatchers(HttpMethod.GET, "/api/repair-orders/*/notes").hasAnyRole("ADMIN", "USER")
-                        .requestMatchers(HttpMethod.POST, "/api/repair-orders/*/notes").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/repair-orders/*/notes/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/repair-orders/*/notes")
+                        .hasAnyAuthority("USER", "ADMIN", "ROLE_USER", "ROLE_ADMIN")
+
+                        .requestMatchers(HttpMethod.POST, "/api/repair-orders/*/notes")
+                        .hasAnyAuthority("ADMIN", "ROLE_ADMIN")
+
+                        .requestMatchers(HttpMethod.DELETE, "/api/repair-orders/*/notes/**")
+                        .hasAnyAuthority("ADMIN", "ROLE_ADMIN")
 
                         .requestMatchers("/api/users/**").hasRole("ADMIN")
 
