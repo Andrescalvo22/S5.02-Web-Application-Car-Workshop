@@ -8,7 +8,7 @@ Includes **JWT Authentication** and **Role-based Authorization (USER / ADMIN)**.
 ## 🚀 Tech Stack
 
 **Backend**
-- Java 17, Spring Boot, Spring Security (JWT)
+- Java 21, Spring Boot 3.5.7 , Spring Security (JWT)
 - JPA/Hibernate, MySQL
 - Lombok, Jakarta Validation
 - Swagger OpenAPI
